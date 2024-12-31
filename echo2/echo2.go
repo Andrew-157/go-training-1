@@ -1,6 +1,6 @@
 /*
 Second implementation of package that implements Echo function,
-that is a very primitive implementation of Unix-like echo command
+which is a very primitive implementation of Unix-like echo command
 */
 package echo2
 
