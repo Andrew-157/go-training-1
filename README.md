@@ -1,14 +1,15 @@
 # Go Tutorial
 
-- [Go Tutorial](#go-tutorial)
-  - [Introduction](#introduction)
-  - [Use custom Go module without publishing it](#use-custom-go-module-without-publishing-it)
+1. [Introduction](#introduction)
+2. [Use custom Go module without publishing it](#use-custom-go-module-without-publishing-it)
 
 ## Introduction
 
 This document describes different useful stuff about `Go` while I am learning it
 
 ## Use custom Go module without publishing it
+
+> `NOTE`: I took it from here: [Call your code from another module](https://go.dev/doc/tutorial/call-module-code)
 
 The following steps will allow you to use a module on a local filesystem without publishing it:
 
