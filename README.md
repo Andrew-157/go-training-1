@@ -3,6 +3,7 @@
 1. [Introduction](#introduction)
 2. [Use custom Go module without publishing it](#use-custom-go-module-without-publishing-it)
 3. [What is a Pointer](#what-is-a-pointer)
+4. [Nested Unpublished Packages](#nested-unpublished-packages)
 
 ## Introduction
 
@@ -104,3 +105,7 @@ fmt.Printf("x == *p is %v\n", x == *p) // Output: x == *p is true
 *p = 45                                // Equivalent to x = 45
 fmt.Printf("Now x is %d\n", x)         // Output: Now x is 45
 ```
+
+## Nested Unpublished Packages
+
+See [document](./nested-unpublished-packages/Nested-unpublished-packages.md)
