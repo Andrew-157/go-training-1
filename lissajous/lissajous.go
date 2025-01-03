@@ -15,7 +15,7 @@ var palette = []color.Color{color.White, color.Black}
 
 const (
 	whiteIndex = 0 // first color in palette
-	blackIndex = 1 // second color in pallete
+	blackIndex = 1 // second color in palette
 )
 
 func main() {
