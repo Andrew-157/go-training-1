@@ -32,6 +32,16 @@ var paletteMapping = map[int]string{
 	4: "blue",
 }
 
+var colorEscapeCodes = map[string]string{
+	"black": "\033[30m",
+	"white": "\033[37m",
+	"red":   "\033[31m",
+	"green": "\033[32m",
+	"blue":  "\033[33m",
+}
+
+const reset = "\033[0m"
+
 func main() {
 	GenerateLissajousGif()
 }
@@ -45,7 +55,6 @@ func GenerateLissajousGif() {
 	fmt.Println()
 	primaryColor = getColorFromInput(false)
 	fmt.Println()
-	// fmt.Printf("You chose %s and %s for the bg and pr, respectively\n", paletteMapping[backgroundColor], paletteMapping[primaryColor])
 	for backgroundColor == primaryColor {
 		var userChoice string // yes or no
 		validChoices := []string{"yes", "y", "no", "n"}
@@ -89,7 +98,8 @@ func displayColors() {
 		return sortedPalleteMappingKeys[i] < sortedPalleteMappingKeys[j]
 	})
 	for index := range sortedPalleteMappingKeys {
-		fmt.Printf("%s(%d)", paletteMapping[index], index)
+		currColor := paletteMapping[index]
+		fmt.Printf("%s%s(%d)%s", colorEscapeCodes[currColor], currColor, index, reset)
 		if index == len(palette)-1 {
 			fmt.Printf(": ")
 		} else {
