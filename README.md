@@ -4,6 +4,7 @@
 2. [Use custom Go module without publishing it](#use-custom-go-module-without-publishing-it)
 3. [What is a Pointer](#what-is-a-pointer)
 4. [Nested Unpublished Packages](#nested-unpublished-packages)
+5. [Lissajous3](#lissajous3)
 
 ## Introduction
 
@@ -109,3 +110,7 @@ fmt.Printf("Now x is %d\n", x)         // Output: Now x is 45
 ## Nested Unpublished Packages
 
 See [document](./nested-unpublished-packages/Nested-unpublished-packages.md)
+
+## Lissajous3
+
+See [document](./lissajous3/Lissajous3.md)

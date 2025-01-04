@@ -1,3 +1,5 @@
+// lissajou4 - creates a named .gif file with lissajous figures
+// with custom background and primary colors provided by user
 package main
 
 import (
@@ -46,6 +48,9 @@ func main() {
 	GenerateLissajousGif()
 }
 
+// `GenerateLissajousGif` generates a lissajous animation and writes it into a user provided file,
+// asks user for the background color and primary color (if they the same, asks user whether
+// they are sure about their choice)
 func GenerateLissajousGif() {
 	var backgroundColor, primaryColor int
 	var fileDescriptor *os.File
@@ -87,8 +92,11 @@ func GenerateLissajousGif() {
 	fmt.Println()
 	fileDescriptor = getFileDescriptorFromInput()
 	lissajous(fileDescriptor, palette[backgroundColor], palette[primaryColor])
+	fmt.Println()
+	fmt.Println("Your gif was generated!")
 }
 
+// `displayColors` displays available colors from the palette
 func displayColors() {
 	var sortedPalleteMappingKeys []int
 	for key := range paletteMapping {
@@ -108,6 +116,9 @@ func displayColors() {
 	}
 }
 
+// `getColorFromInput` gets a user's color choice from the available palette of colors
+// bg bool parameter lets user know whether right now they are choosing color for the
+// background or primary color
 func getColorFromInput(bg bool) int {
 	var context string
 	if bg {
@@ -148,8 +159,11 @@ func getColorFromInput(bg bool) int {
 	}
 }
 
+// `getFileDescriptorFromInput` gets a filename from user (which can be provided as a relative or full path)
+// if file at the provided path already exists - file descriptor for it is returned,
+// if not - new file at filename path is created and file descriptor for it is returned
 func getFileDescriptorFromInput() *os.File {
-	fmt.Printf("Enter a filename(relative or full path) to where gif will be written to(filename must end with .gif): ")
+	fmt.Printf("Enter a filename(relative or full path) to where gif will be written to(enter 'exit' to exit the program): ")
 	scanner := bufio.NewScanner(os.Stdin)
 	var fileDescriptor *os.File
 	var filename string
@@ -192,6 +206,9 @@ func getFileDescriptorFromInput() *os.File {
 	return fileDescriptor
 }
 
+// `lissajous` generates a lissajous animation and writes it to out parameter as a gif
+// bgColor(background color) and prColor(primary color) are passed as parameters
+// to create a palette for the animation
 func lissajous(out io.Writer, bgColor color.Color, prColor color.Color) {
 	palette := []color.Color{bgColor, prColor}
 	const (

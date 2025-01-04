@@ -3,3 +3,5 @@
 ## Add chapter on unit tests
 
 Unittest function `GetInterfaces` in `utils` package.
+
+## Add chapter on handling signals
