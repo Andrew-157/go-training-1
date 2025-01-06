@@ -39,7 +39,7 @@ var colorEscapeCodes = map[string]string{
 	"white": "\033[37m",
 	"red":   "\033[31m",
 	"green": "\033[32m",
-	"blue":  "\033[33m",
+	"blue":  "\033[34m",
 }
 
 const reset = "\033[0m"
