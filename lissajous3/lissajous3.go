@@ -92,6 +92,7 @@ func GenerateLissajousGif() {
 	fmt.Println()
 	fileDescriptor = getFileDescriptorFromInput()
 	lissajous(fileDescriptor, palette[backgroundColor], palette[primaryColor])
+	fileDescriptor.Close()
 	fmt.Println()
 	fmt.Println("Your gif was generated!")
 }
@@ -165,7 +166,6 @@ func getColorFromInput(bg bool) int {
 func getFileDescriptorFromInput() *os.File {
 	fmt.Printf("Enter a filename(relative or full path) to where gif will be written to(enter 'exit' to exit the program): ")
 	scanner := bufio.NewScanner(os.Stdin)
-	var fileDescriptor *os.File
 	var filename string
 	for {
 		scanner.Scan()
@@ -190,18 +190,18 @@ func getFileDescriptorFromInput() *os.File {
 		}
 		break
 	}
-	if _, err := os.Stat(filename); err == nil { // actually, apparently, os.Create can work with an existing file too, but it is useful to know about os.Stat
-		if fileDescriptor, err = os.Open(filename); err != nil {
-			fmt.Fprintf(os.Stderr, "lissajous3: %v\n", err)
-		}
-		fmt.Printf("Using existing file: %s\n", filename)
+
+	if _, err := os.Stat(filename); err == nil {
+		fmt.Println("Using an existing file:", filename)
 	} else if errors.Is(err, os.ErrNotExist) {
-		if fileDescriptor, err = os.Create(filename); err != nil {
-			fmt.Fprintf(os.Stderr, "lissajous3: %v\n", err)
-		}
-		fmt.Printf("Creating a new file: %s\n", filename)
+		fmt.Println("Creating a new file:", filename)
 	} else {
 		fmt.Fprintf(os.Stderr, "lissajous3: %v\n", err)
+	}
+
+	fileDescriptor, err := os.Create(filename)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "lissajou3: %v\n", err)
 	}
 	return fileDescriptor
 }
