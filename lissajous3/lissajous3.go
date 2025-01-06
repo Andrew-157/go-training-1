@@ -1,4 +1,4 @@
-// lissajou4 - creates a named .gif file with lissajous figures
+// lissajous3 - creates a named .gif file with lissajous figures
 // with custom background and primary colors provided by user
 package main
 
@@ -24,6 +24,7 @@ var palette = []color.Color{
 	color.RGBA{255, 0, 0, 255},
 	color.RGBA{0, 255, 0, 255},
 	color.RGBA{0, 0, 255, 255},
+	color.RGBA{255, 255, 0, 255},
 }
 
 var paletteMapping = map[int]string{
@@ -32,17 +33,32 @@ var paletteMapping = map[int]string{
 	2: "red",
 	3: "green",
 	4: "blue",
+	5: "yellow",
 }
 
 var colorEscapeCodes = map[string]string{
-	"black": "\033[30m",
-	"white": "\033[37m",
-	"red":   "\033[31m",
-	"green": "\033[32m",
-	"blue":  "\033[34m",
+	"black":  "\033[30m",
+	"white":  "\033[37m",
+	"red":    "\033[31m",
+	"green":  "\033[32m",
+	"blue":   "\033[34m",
+	"yellow": "\033[33m",
 }
 
-const reset = "\033[0m"
+// valid choices are not a slice to make a condition that would not increase cognitive complexity
+// I know it doesn't look best, but for now is okay, in my opinion
+var validUserBoolChoices = map[string]string{
+	"yes": nonEmptyString,
+	"y":   nonEmptyString,
+	"no":  nonEmptyString,
+	"n":   nonEmptyString,
+}
+
+const (
+	reset          = "\033[0m"
+	errorTemplate  = "lissajous3: %v\n"
+	nonEmptyString = "non-empty string"
+)
 
 func main() {
 	GenerateLissajousGif()
@@ -62,20 +78,12 @@ func GenerateLissajousGif() {
 	fmt.Println()
 	for backgroundColor == primaryColor {
 		var userChoice string // yes or no
-		validChoices := []string{"yes", "y", "no", "n"}
 		scanner := bufio.NewScanner(os.Stdin)
 		for {
-			fmt.Printf("Background and Primary colors are the same, are you sure?%v ", validChoices)
+			fmt.Printf("Background and Primary colors are the same, are you sure?('yes', 'y', 'no', 'n') ")
 			scanner.Scan()
 			userChoice = strings.ToLower(scanner.Text())
-			isChoiceValid := false
-			for _, choice := range validChoices {
-				if choice == userChoice {
-					isChoiceValid = true
-					break
-				}
-			}
-			if !isChoiceValid {
+			if validUserBoolChoices[userChoice] == "" {
 				fmt.Printf("Invalid choice: %s\n", userChoice)
 				continue
 			}
@@ -84,9 +92,9 @@ func GenerateLissajousGif() {
 		if userChoice == "yes" || userChoice == "y" {
 			fmt.Println("Bg and Pr colors will be the same")
 			break
-		} else {
-			primaryColor = getColorFromInput(false)
 		}
+		fmt.Println()
+		primaryColor = getColorFromInput(false)
 	}
 	fmt.Printf("You chose %s and %s for the bg and pr, respectively\n", paletteMapping[backgroundColor], paletteMapping[primaryColor])
 	fmt.Println()
@@ -99,14 +107,14 @@ func GenerateLissajousGif() {
 
 // `displayColors` displays available colors from the palette
 func displayColors() {
-	var sortedPalleteMappingKeys []int
+	var sortedPaletteMappingKeys []int
 	for key := range paletteMapping {
-		sortedPalleteMappingKeys = append(sortedPalleteMappingKeys, key)
+		sortedPaletteMappingKeys = append(sortedPaletteMappingKeys, key)
 	}
-	sort.Slice(sortedPalleteMappingKeys, func(i, j int) bool {
-		return sortedPalleteMappingKeys[i] < sortedPalleteMappingKeys[j]
+	sort.Slice(sortedPaletteMappingKeys, func(i, j int) bool {
+		return sortedPaletteMappingKeys[i] < sortedPaletteMappingKeys[j]
 	})
-	for index := range sortedPalleteMappingKeys {
+	for index := range sortedPaletteMappingKeys {
 		currColor := paletteMapping[index]
 		fmt.Printf("%s%s(%d)%s", colorEscapeCodes[currColor], currColor, index, reset)
 		if index == len(palette)-1 {
@@ -133,30 +141,17 @@ func getColorFromInput(bg bool) int {
 	for {
 		scanner.Scan()
 		input := strings.ToLower(scanner.Text())
-		if input == "exit" {
-			fmt.Println("Exiting...")
-			os.Exit(0)
-		}
-		intInput, err := strconv.Atoi(input)
-		if err != nil { // input is a string
-			for key, val := range paletteMapping {
-				if val == input {
-					fmt.Printf("You chose %s(%d) %s color\n", val, key, context)
-					return key
-				}
+		for key, val := range paletteMapping {
+			if intInput, err := strconv.Atoi(input); (err == nil && intInput == key) || input == val {
+				fmt.Printf("You chose %s(%d) %s color\n", val, key, context)
+				return key
+			} else if input == "exit" {
+				fmt.Println("Exiting...")
+				os.Exit(0)
 			}
-			fmt.Printf("Invalid choice: %s, choose from: ", input)
-			displayColors()
-		} else { // input is a digit
-			for key, val := range paletteMapping {
-				if key == intInput {
-					fmt.Printf("You chose %s(%d) %s\n", val, key, context)
-					return key
-				}
-			}
-			fmt.Printf("Invalid choice: %d, choose from: ", intInput)
-			displayColors()
 		}
+		fmt.Printf("Invalid choice: %s, choose from: ", input)
+		displayColors()
 	}
 }
 
@@ -196,12 +191,12 @@ func getFileDescriptorFromInput() *os.File {
 	} else if errors.Is(err, os.ErrNotExist) {
 		fmt.Println("Creating a new file:", filename)
 	} else {
-		fmt.Fprintf(os.Stderr, "lissajous3: %v\n", err)
+		fmt.Fprintf(os.Stderr, errorTemplate, err)
 	}
 
 	fileDescriptor, err := os.Create(filename)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "lissajou3: %v\n", err)
+		fmt.Fprintf(os.Stderr, errorTemplate, err)
 	}
 	return fileDescriptor
 }
@@ -238,5 +233,7 @@ func lissajous(out io.Writer, bgColor color.Color, prColor color.Color) {
 		anim.Delay = append(anim.Delay, delay)
 		anim.Image = append(anim.Image, img)
 	}
-	gif.EncodeAll(out, &anim) // NOTE: ignoring encoding errors
+	if err := gif.EncodeAll(out, &anim); err != nil {
+		fmt.Fprintf(os.Stderr, errorTemplate, err)
+	}
 }
