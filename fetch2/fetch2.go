@@ -19,13 +19,13 @@ func main() {
 		}
 		resp, err := http.Get(url)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+			fmt.Fprintf(os.Stderr, "fetch2: %v\n", err)
 			os.Exit(1)
 		}
 		_, err = io.Copy(os.Stdout, resp.Body)
 		resp.Body.Close()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
+			fmt.Fprintf(os.Stderr, "fetch2: reading %s: %v\n", url, err)
 			os.Exit(1)
 		}
 	}
