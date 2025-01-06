@@ -192,11 +192,13 @@ func getFileDescriptorFromInput() *os.File {
 		fmt.Println("Creating a new file:", filename)
 	} else {
 		fmt.Fprintf(os.Stderr, errorTemplate, err)
+		os.Exit(1)
 	}
 
 	fileDescriptor, err := os.Create(filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, errorTemplate, err)
+		os.Exit(1)
 	}
 	return fileDescriptor
 }
@@ -235,5 +237,6 @@ func lissajous(out io.Writer, bgColor color.Color, prColor color.Color) {
 	}
 	if err := gif.EncodeAll(out, &anim); err != nil {
 		fmt.Fprintf(os.Stderr, errorTemplate, err)
+		os.Exit(1)
 	}
 }
