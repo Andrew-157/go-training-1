@@ -29,6 +29,13 @@ func main() {
 		fmt.Println(<-ch)
 	}
 	fmt.Printf("Total: %.2fs elapsed.\n", time.Since(start).Seconds())
+	//Exemplary output:
+	// 	root@fedora:~/go_dir# ./fetchcaching.out google.com http://yahoo.com https://youtube.com fjdjdjdffh.com
+	// fetchcaching: 1 try fetching url http://fjdjdjdffh.com: Get "http://fjdjdjdffh.com": dial tcp: lookup fjdjdjdffh.com on 127.0.0.53:53: no such host
+	// http://google.com: 1 try: [0.25s elapsed|  19261 bytes retrieved], 2 try: [0.11s elapsed|  19280 bytes retrieved]
+	// https://youtube.com: 1 try: [0.48s elapsed| 573916 bytes retrieved], 2 try: [0.31s elapsed| 573055 bytes retrieved]
+	// http://yahoo.com: 1 try: [1.76s elapsed|1724873 bytes retrieved], 2 try: [0.96s elapsed|1725090 bytes retrieved]
+	// Total: 2.72s elapsed.
 }
 
 func fetchCache(url string, ch chan<- string, tries int) {
