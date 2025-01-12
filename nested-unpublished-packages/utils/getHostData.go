@@ -12,27 +12,14 @@ import (
 // If the command returns a non-zero exit code, the function logs the error and exits the program.
 //
 // Parameters:
-//   - cmd: The command to execute, including arguments if argsPresent is true.
-//   - argsPresent: A flag indicating whether arguments are included in cmd.
-//     If false, cmd should be a single command (e.g., "ls").
-//     If true, cmd should include arguments (e.g., "ls -a").
+//   - cmd: The command to execute, including arguments.
 //
 // Returns:
 //
 //	The output of the command if it executes successfully. Exits the program if an error occurs.
-func execute(cmd string, argsPresent bool) string {
-	var (
-		out []byte
-		err error
-	)
-	if argsPresent {
-		splittedCmd := strings.Split(cmd, " ")
-		cmd = splittedCmd[0]
-		args := strings.Join(splittedCmd[1:], " ")
-		out, err = exec.Command(cmd, args).Output()
-	} else {
-		out, err = exec.Command(cmd).Output()
-	}
+func execute(cmd string) string {
+	splittedCmd := strings.Split(cmd, " ")
+	out, err := exec.Command(splittedCmd[0], splittedCmd[1:]...).Output()
 	if err != nil {
 		log.Fatalf("Error happened during execution of `%v`: %v\n", cmd, err)
 		os.Exit(1)
@@ -42,7 +29,7 @@ func execute(cmd string, argsPresent bool) string {
 
 // `GetHostname` returns hostname of the host
 func GetHostname() string {
-	return execute("hostname", false)
+	return execute("hostname")
 }
 
 // `GetInterfaces` returns map of all interfaces on host as keys
@@ -50,7 +37,7 @@ func GetHostname() string {
 func GetInterfaces() map[string]string {
 	interfaceIP := make(map[string]string)
 	interfaceSectionLen := 6 // Number of lines for one interface in `ip a` output
-	splitted := strings.Split(execute("ip addr", true), "\n")
+	splitted := strings.Split(execute("ip addr"), "\n")
 	numberOfInterfaces := len(splitted) / interfaceSectionLen
 	j := 0
 	for i := 1; i <= numberOfInterfaces; i++ {
