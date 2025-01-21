@@ -5,6 +5,7 @@
 3. [What is a Pointer](#what-is-a-pointer)
 4. [Nested Unpublished Packages](#nested-unpublished-packages)
 5. [Lissajous3](#lissajous3)
+6. [Template Server](#template-server)
 
 ## Introduction
 
@@ -114,3 +115,7 @@ See [document](./nested-unpublished-packages/Nested-unpublished-packages.md)
 ## Lissajous3
 
 See [document](./lissajous3/Lissajous3.md)
+
+## Template Server
+
+See [document](./template-server/template-server.md)
