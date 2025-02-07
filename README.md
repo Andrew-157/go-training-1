@@ -6,6 +6,7 @@
 4. [Nested Unpublished Packages](#nested-unpublished-packages)
 5. [Lissajous3](#lissajous3)
 6. [Template Server](#template-server)
+7. [String Method for Named Type](#string-method-for-named-type)
 
 ## Introduction
 
@@ -119,3 +120,39 @@ See [document](./lissajous3/Lissajous3.md)
 ## Template Server
 
 See [document](./template-server/template-server.md)
+
+## String Method for Named Type
+
+```go
+package main
+
+import "fmt"
+
+type Celsius float64
+type Fahrenheit float64
+
+func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }
+
+func main() {
+        c := FToC(212.0)
+        fmt.Println(c.String()) // "100°C"
+        fmt.Printf("%v\n", c)   // "100°C"; no need to call String explicitly
+        fmt.Printf("%s\n", c)   // "100°C"
+        fmt.Println(c)          // "100°C"
+        fmt.Printf("%g\n", c)   // "100"; does not call String
+        fmt.Println(float64(c)) // "100"; does not call String
+}
+
+func FToC(f Fahrenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+
+```
+
+```bash
+root@fedora:~/go_dir# go run run.go 
+100°C
+100°C
+100°C
+100°C
+100
+100
+```
